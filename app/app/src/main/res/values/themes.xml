@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.MyApplication" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Base theme of the application -->
+    <style name="Theme.MyApplication" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- Apply the custom calendar style globally to all CalendarView elements -->
+        <item name="android:calendarViewStyle">@style/CustomCalendarStyle</item>
+    </style>
+
+    <!-- Custom style for CalendarView -->
+    <style name="CustomCalendarStyle" parent="android:Widget.Material.CalendarView">
+        <item name="android:dateTextAppearance">@style/CalendarDateText</item>
+        <item name="android:weekDayTextAppearance">@style/CalendarWeekDayText</item>
+        <!-- Add other calendar attributes as needed -->
+    </style>
+
+    <!-- Style for date text appearance -->
+    <style name="CalendarDateText">
+        <item name="android:textColor">#c9b8ff</item> <!-- Example text color -->
+        <item name="android:textSize">16sp</item>      <!-- Example text size -->
+    </style>
+
+    <!-- Style for weekday text appearance -->
+    <style name="CalendarWeekDayText">
+        <item name="android:textColor">#c9b8ff</item> <!-- Example text color -->
+        <item name="android:textSize">14sp</item>      <!-- Example text size -->
+    </style>
+
 </resources>
