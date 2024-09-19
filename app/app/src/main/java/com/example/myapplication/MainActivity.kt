@@ -28,17 +28,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent {
-            MyApplicationTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    GreetingWithNetworkRequest(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+
+            setContentView(R.layout.login)
         }
     }
-}
 
 @Composable
 fun GreetingWithNetworkRequest(modifier: Modifier = Modifier) {
