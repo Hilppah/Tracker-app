@@ -25,5 +25,9 @@
         <item name="android:textColor">#c9b8ff</item> <!-- Example text color -->
         <item name="android:textSize">14sp</item>      <!-- Example text size -->
     </style>
-
+        <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+            <item name="colorPrimary">#FFBB86FC</item>
+            <item name="colorPrimaryDark">#FFBB86FC</item>
+            <item name="colorAccent">#FFBB86FC</item>
+        </style>
 </resources>
