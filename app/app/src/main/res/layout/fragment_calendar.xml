@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".calendarFragment"
+    android:background="#eae4ff">
+
+        <CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#EAE4FF"
+            android:theme="@style/CustomCalendarStyle" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="155dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="7dp"
+            android:backgroundTint="#c9b8ff"
+            android:gravity="center"
+            android:text="How do you feel today?"
+            android:textColor="@color/white" />
+</FrameLayout>

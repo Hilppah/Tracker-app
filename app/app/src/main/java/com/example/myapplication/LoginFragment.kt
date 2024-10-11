@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.util.Log
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import kotlinx.coroutines.CoroutineScope
@@ -38,11 +39,20 @@ class LoginFragment : Fragment() {
 
 
         loginButton.setOnClickListener {
-            val loginSuccessful = login()
-            if (loginSuccessful) {
-                Log.d("loginFragment", "successful")
-            } else {
-                Log.d("LoginFragment", "Login failed")
+            CoroutineScope(Dispatchers.Main).launch{
+                val isLoginSuccessful = login()
+                Log.d("is login sucessful", isLoginSuccessful.toString())
+                if (isLoginSuccessful == true) {
+                    Log.d("LoginFragment", "Login successful!")
+                    Toast.makeText(requireContext(), "Login successful!", Toast.LENGTH_SHORT).show()
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, calendarFragment())
+                        .addToBackStack(null)
+                        .commit()
+                } else {
+                    Log.d("LoginFragment", "Login failed")
+                    Toast.makeText(requireContext(), "Login failed", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -56,14 +66,14 @@ class LoginFragment : Fragment() {
         return view
     }
 
-    private fun login(): Boolean {
+    private suspend fun login(): Boolean {
         val loginData =
             mapOf("email" to emailText.text.toString(), "password" to passwordText.text.toString())
         val mapper = jacksonObjectMapper()
         val jsonString = mapper.writeValueAsString(loginData)
         val requestBody = jsonString.toRequestBody("application/json; charset=utf-8".toMediaType())
 
-        CoroutineScope(Dispatchers.IO).launch {
+        return withContext(Dispatchers.IO) {
             try {
                 val client = OkHttpClient()
                 val request = Request.Builder()
@@ -73,21 +83,19 @@ class LoginFragment : Fragment() {
 
                 val response = client.newCall(request).execute()
 
-                withContext(Dispatchers.Main) {
-                    if (response.code == 200) {
-                        Log.d("httpresponse", "Login successful: ${response.message}")
-                        return@withContext true
-                    } else {
-                        Log.d("httpresponse", "Login failed: ${response.message}")
-                    }
+                if (response.code == 200) {
+                    Log.d("httpresponse", "Login successful: ${response.message}")
+                    return@withContext true
+                } else {
+                    Log.d("httpresponse", "Login failed: ${response.message}")
+                    return@withContext false
                 }
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Log.e("httpresponse", "Request failed: ${e.message}")
-                }
+                Log.e("httpresponse", "Request failed: ${e.message}")
+                return@withContext false
             }
         }
-        return false
     }
-    }
+}
+
 
