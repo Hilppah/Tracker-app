@@ -16,6 +16,8 @@ def register():
     if request.method == 'POST':
         email = request.get_json().get('email')
         password = request.get_json().get('password')
+        if not email or not password:
+            return jsonify({'error': 'Email and password are required.'}), 400
 
         cursor = mysql.connection.cursor()
         register_query = "INSERT INTO users ( password, email) VALUES (%s, %s)"
@@ -38,6 +40,8 @@ def login():
     if request.method == 'POST':
         email = request.get_json().get('email')
         password = request.get_json().get('password')
+        if not email or not password:
+            return jsonify({'error': 'Email and password are required.'}), 400
 
         cursor = mysql.connection.cursor()
         login_query = "SELECT * FROM users WHERE email = %s"
