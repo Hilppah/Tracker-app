@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.util.Log
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import kotlinx.coroutines.CoroutineScope
@@ -39,11 +40,20 @@ class RegisterFragment : Fragment() {
 
 
         registerButton.setOnClickListener {
-            val registerSuccessful = register()
-            if (registerSuccessful) {
-                Log.d("register fragment", "successful")
-            } else {
-                Log.d("RegisterFragment", "Registration failed")
+            CoroutineScope(Dispatchers.Main).launch {
+                val registerSuccessful = register()
+                Log.d("RegisterFragment", "Register successful: $registerSuccessful")
+                if (registerSuccessful) {
+                    Log.d("RegisterFragment", "Registration successful!")
+                    Toast.makeText(requireContext(), "Register successful!", Toast.LENGTH_SHORT).show()
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, LoginFragment())
+                        .addToBackStack(null)
+                        .commit()
+                } else {
+                    Log.d("RegisterFragment", "Registration failed")
+                    Toast.makeText(requireContext(), "Register failed", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -57,17 +67,14 @@ class RegisterFragment : Fragment() {
         return view
     }
 
-    private fun register(): Boolean {
-        val registerData = mapOf(
-            "email" to emailText.text.toString(),
-            "password" to passwordText.text.toString()
-        )
+    private suspend fun register(): Boolean {
+        val registerData =
+            mapOf("email" to emailText.text.toString(), "password" to passwordText.text.toString())
         val mapper = jacksonObjectMapper()
         val jsonString = mapper.writeValueAsString(registerData)
-        val requestBody =
-            jsonString.toRequestBody("application/json; charset=utf-8".toMediaType())
+        val requestBody = jsonString.toRequestBody("application/json; charset=utf-8".toMediaType())
 
-        CoroutineScope(Dispatchers.IO).launch {
+        return withContext(Dispatchers.IO) {
             try {
                 val client = OkHttpClient()
                 val request = Request.Builder()
@@ -77,20 +84,17 @@ class RegisterFragment : Fragment() {
 
                 val response = client.newCall(request).execute()
 
-                withContext(Dispatchers.Main) {
-                    if (response.code == 201) {
-                        Log.d("httpresponse", "Register successful: ${response.message}")
-                        return@withContext true
-                    } else {
-                        Log.d("httpresponse", "Register failed: ${response.message}")
-                    }
+                if (response.code == 201) {
+                    Log.d("httpresponse", "Register successful: ${response.message}")
+                    return@withContext true
+                } else {
+                    Log.d("httpresponse", "Register failed: ${response.message}")
+                    return@withContext false
                 }
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Log.e("httpresponse", "Request failed: ${e.message}")
-                }
+                Log.e("httpresponse", "Request failed: ${e.message}")
+                return@withContext false
             }
         }
-        return false
     }
 }

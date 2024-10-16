@@ -35,7 +35,6 @@
         android:layout_marginEnd="70dp"
         android:layout_marginBottom="30dp"
         android:ems="10"
-        android:gravity="bottom|end"
         android:inputType="textEmailAddress" />
 
     <TextView
