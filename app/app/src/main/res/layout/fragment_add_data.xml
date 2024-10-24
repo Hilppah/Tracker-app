@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddDataFragment"
+    android:background="#eae4ff">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#c9b8ff"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+
+        />
+
+    <Button
+        android:id="@+id/buttonProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:textColor="#c9b8ff"
+        android:text="profile" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/editTextDate"
+        android:layout_marginTop="20dp"
+        android:text="How did you feel?"
+        android:textAlignment="center"
+        android:textSize="20sp" />
+
+    <ImageButton
+        android:id="@+id/imageButtonHappy"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_below="@+id/textView4"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="20dp"
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="Happy"/>
+
+    <TextView
+        android:id="@+id/editTextTextHappy"
+        android:layout_width="54dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageButtonHappy"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="25dp"
+        android:ems="10"
+        android:text="Happy"
+        android:textAlignment="center" />
+
+    <ImageButton
+        android:id="@+id/imageButtonSad"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_below="@+id/textView4"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@+id/imageButtonHappy"
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="Sad"/>
+
+    <TextView
+        android:id="@+id/editTextTextSad"
+        android:layout_width="57dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageButtonSad"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="25dp"
+        android:layout_toEndOf="@+id/editTextTextHappy"
+        android:ems="10"
+        android:text="Sad"
+        android:textAlignment="center" />
+
+    <ImageButton
+        android:id="@+id/imageButtonAnxious"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_below="@+id/textView4"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@+id/imageButtonConfident"
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="Anxious"/>
+
+    <TextView
+        android:id="@+id/editTextTextAnxious"
+        android:layout_width="57dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageButtonAnxious"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="25dp"
+        android:layout_toEndOf="@+id/editTextTextConfident"
+        android:ems="10"
+        android:text="Anxious"
+        android:textAlignment="center" />
+
+    <ImageButton
+        android:id="@+id/imageButtonConfident"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_below="@+id/textView4"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@+id/imageButtonSad"
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="Confident"/>
+
+    <TextView
+        android:id="@+id/editTextTextConfident"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageButtonConfident"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="20dp"
+        android:layout_toEndOf="@+id/editTextTextSad"
+        android:ems="10"
+        android:text="Confident"
+        android:textAlignment="center" />
+
+    <ImageButton
+        android:id="@+id/imageButtonAngry"
+        android:layout_width="49dp"
+        android:layout_height="53dp"
+        android:layout_below="@+id/textView4"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_toEndOf="@+id/imageButtonAnxious"
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="Angry"/>
+
+    <TextView
+        android:id="@+id/editTextTextAngry"
+        android:layout_width="57dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageButtonAngry"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="20dp"
+        android:layout_toEndOf="@+id/editTextTextAnxious"
+        android:ems="10"
+        android:text="Angry"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/textViewSick"
+        android:layout_width="377dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editTextTextConfident"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="14dp"
+        android:gravity="center"
+        android:text="Were you sick or did you have any pain?"
+        android:textSize="20sp" />
+
+    <ImageButton
+        android:id="@+id/imageButtonNo"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_below="@+id/textViewSick"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="19dp"
+        android:contentDescription="No"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/editTextTextNo"
+        android:layout_width="65dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageButtonNo"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="25dp"
+        android:ems="10"
+        android:text="No pain"
+        android:textAlignment="center" />
+
+    <ImageButton
+        android:id="@+id/imageButtonFlu"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_below="@+id/textViewSick"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@+id/imageButtonHappy"
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="Flu"/>
+
+    <TextView
+        android:id="@+id/editTextTextFlu"
+        android:layout_width="35dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageButtonFlu"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="25dp"
+        android:layout_toEndOf="@+id/editTextTextNo"
+        android:ems="10"
+        android:text="Flu"
+        android:textAlignment="center" />
+
+    <ImageButton
+        android:id="@+id/imageButtonFever"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_below="@+id/textViewSick"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@+id/imageButtonFlu"
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="Fever"/>
+
+    <TextView
+        android:id="@+id/editTextTextFever"
+        android:layout_width="57dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageButtonFever"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="25dp"
+        android:layout_toEndOf="@+id/editTextTextFlu"
+        android:ems="10"
+        android:text="Fever"
+        android:textAlignment="center" />
+
+    <ImageButton
+        android:id="@+id/imageButtonHead"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_below="@+id/textViewSick"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@+id/imageButtonFever"
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="Headache"/>
+
+    <TextView
+        android:id="@+id/editTextTextHead"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageButtonHead"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="20dp"
+        android:layout_toEndOf="@+id/editTextTextFever"
+        android:ems="10"
+        android:text="Headache"
+        android:textAlignment="center" />
+
+    <ImageButton
+        android:id="@+id/imageButtonCramps"
+        android:layout_width="49dp"
+        android:layout_height="53dp"
+        android:layout_below="@+id/textViewSick"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_toEndOf="@+id/imageButtonHead"
+        tools:srcCompat="@tools:sample/avatars"
+        android:contentDescription="Cramps"/>
+
+    <TextView
+        android:id="@+id/editTextTextCramps"
+        android:layout_width="57dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageButtonCramps"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="20dp"
+        android:layout_toEndOf="@+id/editTextTextHead"
+        android:ems="10"
+        android:text="Cramps"
+        android:textAlignment="center" />
+
+
+    <TextView
+        android:id="@+id/textViewDate"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="25dp"
+        android:text="What day is it?"
+        android:textAlignment="center"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/editTextDate"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@+id/textViewDate"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="100dp"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="date" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextTextFever"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="How may hours did you sleep?"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/editTextTime"
+        android:layout_width="264dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="67dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="80dp"
+        android:ems="10"
+        android:inputType="time" />
+
+    <Button
+        android:id="@+id/buttonSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editTextTime"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="168dp"
+        android:gravity="center"
+        android:background="#c9b8ff"
+        android:textColor="@color/white"
+        android:text="Save" />
+
+
+</RelativeLayout>
