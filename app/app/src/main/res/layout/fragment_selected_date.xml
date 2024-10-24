@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SelectedDateFragment"
+    android:background="#eae4ff">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#c9b8ff"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+
+        />
+
+    <Button
+        android:id="@+id/buttonProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:textColor="#c9b8ff"
+        android:text="profile" />
+
+
+    <EditText
+        android:id="@+id/editTextSelectedDate"
+        android:layout_width="wrap_content"
+        android:layout_height="61dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="110dp"
+        android:layout_marginTop="47dp"
+        android:layout_marginEnd="91dp"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="date" />
+
+    <TextView
+        android:id="@+id/textViewInfo"
+        android:layout_width="315dp"
+        android:layout_height="314dp"
+        android:layout_below="@+id/editTextSelectedDate"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="105dp"
+        android:layout_marginEnd="40dp"
+        android:gravity="center"
+        android:text="TextView" />
+
+    <Button
+        android:id="@+id/buttonAdd"
+        android:layout_width="152dp"
+        android:layout_height="69dp"
+        android:layout_below="@+id/textViewInfo"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="136dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="123dp"
+        android:layout_marginBottom="52dp"
+        android:background="#c9b8ff"
+        android:text="How do you feel?"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/buttonDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@+id/editTextSelectedDate"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="297dp"
+        android:layout_marginTop="51dp"
+        android:layout_marginEnd="26dp"
+        android:layout_marginBottom="34dp"
+        android:background="#c9b8ff"
+        android:text="Delete all"
+        android:textColor="@color/white" />
+
+
+</RelativeLayout>

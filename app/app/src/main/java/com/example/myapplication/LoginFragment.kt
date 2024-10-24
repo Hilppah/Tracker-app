@@ -46,7 +46,7 @@ class LoginFragment : Fragment() {
                     Log.d("LoginFragment", "Login successful!")
                     Toast.makeText(requireContext(), "Login successful!", Toast.LENGTH_SHORT).show()
                     parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainer, calendarFragment())
+                        .replace(R.id.fragmentContainer, CalendarFragment())
                         .addToBackStack(null)
                         .commit()
                 } else {
