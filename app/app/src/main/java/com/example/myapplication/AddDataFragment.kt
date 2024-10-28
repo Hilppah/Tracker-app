@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 
 
 class AddDataFragment : Fragment() {
@@ -63,17 +73,42 @@ class AddDataFragment : Fragment() {
 
 
         buttonSave.setOnClickListener {
-            val hoursSlept = hoursSlept.text.toString()
+            CoroutineScope(Dispatchers.Main).launch {
+                val hoursSlept = hoursSlept.text.toString()
 
-            if (hoursSlept.isEmpty() || selectedEmotionsList.isEmpty()) {
-                Toast.makeText((requireContext()), "Please fill all the fields", Toast.LENGTH_SHORT).show()
-            } else {
-                val emotionsString = selectedEmotionsList.joinToString(separator = ", ")
-                val painString = selectedEmotionsList.joinToString(separator = ", ")
-                val dailyActivity = DailyActivity(selectedDate.toString(), emotionsString, painString, hoursSlept.toFloat(),)
+                if (hoursSlept.isEmpty() || selectedEmotionsList.isEmpty()) {
+                    Toast.makeText(
+                        (requireContext()),
+                        "Please fill all the fields",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    val emotionsString = selectedEmotionsList.joinToString(separator = ", ")
+                    val painString = selectedEmotionsList.joinToString(separator = ", ")
+                    val dailyActivity = DailyActivity(
+                        selectedDate.text.toString(),
+                        emotionsString,
+                        painString,
+                        hoursSlept.toFloat(),
+                    )
+
+                    val isDataSentSucessful = sendDataWorks(dailyActivity)
+                    if (isDataSentSucessful == true) {
+                        Toast.makeText(
+                            (requireContext()),
+                            "Data saved successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            (requireContext()),
+                            "Data save failed",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
 
 
-                Toast.makeText((requireContext()), "Data saved successfully", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -146,4 +181,41 @@ class AddDataFragment : Fragment() {
             button.alpha = 0.5f
         }
     }
+
+    private suspend fun sendDataWorks(dailyActivity: DailyActivity): Boolean {
+        val activityData = mapOf(
+            "date" to dailyActivity.date,
+            "emotion" to dailyActivity.emotion,
+            "pain" to dailyActivity.pain,
+            "hoursSlept" to dailyActivity.hoursSlept
+        )
+        val mapper = jacksonObjectMapper()
+        val jsonString = mapper.writeValueAsString(activityData)
+        val requestBody = jsonString.toRequestBody("application/json; charset=utf-8".toMediaType())
+        Log.d("sendData", "sendData:  ${jsonString}")
+
+        return withContext(Dispatchers.IO) {
+            try {
+                val client = OkHttpClient()
+                val request = Request.Builder()
+                    .url("http://10.0.2.2:5000/addData")
+                    .post(requestBody)
+                    .build()
+
+                val response = client.newCall(request).execute()
+
+                if (response.code ==200) {
+                    return@withContext true
+                } else {
+                    return@withContext false
+                }
+
+            } catch (e: Exception) {
+                Log.e("httpresponse", "Request failed: ${e.message}")
+                return@withContext false
+            }
+        }
+    }
+
 }
+

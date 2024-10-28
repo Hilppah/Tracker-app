@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,7 @@ import android.widget.TextView
 
 class SelectedDateFragment : Fragment() {
 
-    private lateinit var displayDate: Button
+    private lateinit var displayDate: TextView
     private lateinit var deleteButton: Button
     private lateinit var howFeelButton: Button
     private lateinit var feelingInfo: TextView
@@ -28,6 +29,7 @@ class SelectedDateFragment : Fragment() {
 
 
         val selectedDate = arguments?.getString("selected_date")
+        Log.d("selected date", "selected date $selectedDate" )
 
 
        return view
