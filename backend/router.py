@@ -64,4 +64,48 @@ def login():
         finally:
             cursor.close()
 
+            
+
     return jsonify({'error': 'Invalid request method'}), 405
+
+@app.route('/addData', methods=['POST'])
+def add_data():
+    if request.method == 'POST':
+        data = request.get_json()
+        date = data.get('date')
+        emotion = data.get('emotion')
+        pain = data.get('pain')
+        hoursSlept = data.get('hoursSlept')
+
+
+        if not all([date, emotion, pain, hoursSlept]):
+            return jsonify({'error': 'Fill all of the fields'}), 400
+
+        return jsonify({'message': 'Data saved successfully!'}), 200
+
+
+#temporary
+@app.route('/getData', methods=['GET'])
+def get_data():
+    fake_data = [
+        {
+            "date": "24/12/2024",
+            "emotion": "happy",
+            "pain": "no pain",
+            "hoursSlept": 7
+        },
+        {
+            "date": "17/09/2024",
+            "emotion": "sad",
+            "pain": "headache",
+            "hoursSlept": 5
+        },
+        {
+            "date": "15/11/2024",
+            "emotion": "angry",
+            "pain": "no pain",
+            "hoursSlept": 6
+        }
+    ]
+
+    return jsonify(fake_data), 200
