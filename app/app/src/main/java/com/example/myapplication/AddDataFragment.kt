@@ -94,17 +94,9 @@ class AddDataFragment : Fragment() {
 
                     val isDataSentSucessful = sendDataWorks(dailyActivity)
                     if (isDataSentSucessful == true) {
-                        Toast.makeText(
-                            (requireContext()),
-                            "Data saved successfully",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText((requireContext()), "Data saved successfully", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(
-                            (requireContext()),
-                            "Data save failed",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText((requireContext()), "Data save failed", Toast.LENGTH_SHORT).show()
                     }
 
 
