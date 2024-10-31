@@ -87,25 +87,12 @@ def add_data():
 #temporary
 @app.route('/getData', methods=['GET'])
 def get_data():
-    fake_data = [
-        {
+    fake_data = {
             "date": "24/12/2024",
             "emotion": "happy",
             "pain": "no pain",
             "hoursSlept": 7
-        },
-        {
-            "date": "17/09/2024",
-            "emotion": "sad",
-            "pain": "headache",
-            "hoursSlept": 5
-        },
-        {
-            "date": "15/11/2024",
-            "emotion": "angry",
-            "pain": "no pain",
-            "hoursSlept": 6
         }
-    ]
+    
 
     return jsonify(fake_data), 200
