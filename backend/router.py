@@ -1,5 +1,6 @@
 from flask import Flask, flash, request, jsonify
 from flask_mysqldb import MySQL
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "super secret key"
@@ -52,9 +53,10 @@ def login():
             print(user)
             if user:
                 stored_password = user[2]
+                userID = user[0]
                 if password == stored_password:
                     flash('Login successful!', 'success')
-                    return jsonify({'message': 'Login successful!'}), 200
+                    return jsonify({'message': 'Login successful!', 'userID': userID}), 200
                 else:
                     return jsonify({'error': 'Invalid password'}), 401
             else:
@@ -72,27 +74,61 @@ def login():
 def add_data():
     if request.method == 'POST':
         data = request.get_json()
-        date = data.get('date')
+        activity_date = data.get('date')
         emotion = data.get('emotion')
         pain = data.get('pain')
-        hoursSlept = data.get('hoursSlept')
+        hours_slept = data.get('hoursSlept')
+        user_id =data.get('user_id')
 
-
-        if not all([date, emotion, pain, hoursSlept]):
+        if not all([activity_date, emotion, pain, hours_slept]):
             return jsonify({'error': 'Fill all of the fields'}), 400
+        
+        cursor = mysql.connection.cursor()
+        activity_query = "INSERT INTO daily_activity (user_id, activity_date, emotion, pain, hours_slept) VALUES (%s, %s, %s, %s, %s)"
 
-        return jsonify({'message': 'Data saved successfully!'}), 200
+        try:
+            parsed_date = datetime.strptime(activity_date, "%d.%m.%Y")
+            formatted_date = parsed_date.strftime("%Y-%m-%d")
+            cursor.execute(activity_query, ( user_id, formatted_date, emotion, pain, hours_slept))
+            mysql.connection.commit()
+            return jsonify({ 'message': 'data successfully added'}), 201   
+        except Exception as e:
+            mysql.connection.rollback()
+            return jsonify({'error': str(e)}), 500
+        finally:
+            cursor.close()
 
 
-#temporary
+
 @app.route('/getData', methods=['GET'])
 def get_data():
-    fake_data = {
-            "date": "24/12/2024",
-            "emotion": "happy",
-            "pain": "no pain",
-            "hoursSlept": 7
-        }
+    user_id = request.args.get('user_id') 
+    activity_date = request.args.get('date') 
+
+
+    if not user_id or not activity_date:
+        return jsonify({'error': 'Both user_id and date are required'}), 400
+    
+    cursor = mysql.connection.cursor()
+    get_query ="SELECT user_id, activity_date, emotion, pain, hours_slept FROM daily_activity WHERE user_id = %s AND activity_date = %s"
+    
+    try: 
+        cursor.execute(get_query, (user_id, activity_date))
+        result = cursor.fetchone()
+
+        if result:
+            data = {
+                'activity_date': result[1],
+                'emotion': result[2],
+                'pain': result[3],
+                'hours_slept': result[4]
+            }
+            return jsonify(data), 200
+        else:
+            return jsonify({'error': 'No data found for the given user_id and date'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
     
 
-    return jsonify(fake_data), 200
