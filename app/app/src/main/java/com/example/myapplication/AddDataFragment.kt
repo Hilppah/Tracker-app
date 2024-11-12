@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -44,7 +45,8 @@ class AddDataFragment : Fragment() {
         val date: String,
         val emotion: String,
         val pain: String,
-        val hoursSlept: Float
+        val hoursSlept: Float,
+        val userId: Int
 
     )
 
@@ -76,24 +78,28 @@ class AddDataFragment : Fragment() {
             CoroutineScope(Dispatchers.Main).launch {
                 val hoursSlept = hoursSlept.text.toString()
 
-                if (hoursSlept.isEmpty() || selectedEmotionsList.isEmpty()) {
+                if (hoursSlept.isEmpty() || selectedEmotionsList.isEmpty() || selectedPainList.isEmpty()) {
                     Toast.makeText(
                         (requireContext()),
                         "Please fill all the fields",
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
+                    val sharedPreferences = requireContext().getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    val userId = sharedPreferences.getInt("user_id", 0)
+
                     val emotionsString = selectedEmotionsList.joinToString(separator = ", ")
-                    val painString = selectedEmotionsList.joinToString(separator = ", ")
+                    val painString = selectedPainList.joinToString(separator = ", ")
                     val dailyActivity = DailyActivity(
                         selectedDate.text.toString(),
                         emotionsString,
                         painString,
                         hoursSlept.toFloat(),
+                        userId
                     )
 
-                    val isDataSentSucessful = sendDataWorks(dailyActivity)
-                    if (isDataSentSucessful == true) {
+                    val isDataSentSuccessful = sendData(dailyActivity)
+                    if (isDataSentSuccessful == true) {
                         Toast.makeText((requireContext()), "Data saved successfully", Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText((requireContext()), "Data save failed", Toast.LENGTH_SHORT).show()
@@ -174,12 +180,13 @@ class AddDataFragment : Fragment() {
         }
     }
 
-    private suspend fun sendDataWorks(dailyActivity: DailyActivity): Boolean {
+    private suspend fun sendData(dailyActivity: DailyActivity): Boolean {
         val activityData = mapOf(
             "date" to dailyActivity.date,
             "emotion" to dailyActivity.emotion,
             "pain" to dailyActivity.pain,
-            "hoursSlept" to dailyActivity.hoursSlept
+            "hoursSlept" to dailyActivity.hoursSlept,
+            "user_id" to dailyActivity.userId
         )
         val mapper = jacksonObjectMapper()
         val jsonString = mapper.writeValueAsString(activityData)
@@ -196,7 +203,7 @@ class AddDataFragment : Fragment() {
 
                 val response = client.newCall(request).execute()
 
-                if (response.code ==200) {
+                if (response.code ==201) {
                     return@withContext true
                 } else {
                     return@withContext false

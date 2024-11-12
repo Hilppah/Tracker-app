@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,6 +20,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import android.content.SharedPreferences
 
 class LoginFragment : Fragment() {
 
@@ -66,6 +69,11 @@ class LoginFragment : Fragment() {
         return view
     }
 
+    data class LoginResponse(
+        val message: String,
+        val userID: Int
+    )
+
     private suspend fun login(): Boolean {
         val loginData =
             mapOf("email" to emailText.text.toString(), "password" to passwordText.text.toString())
@@ -84,6 +92,14 @@ class LoginFragment : Fragment() {
                 val response = client.newCall(request).execute()
 
                 if (response.code == 200) {
+                    response.body?.string()?.let { responseBody ->
+                        val loginResponse: LoginResponse = mapper.readValue(responseBody)
+                        val userID = loginResponse.userID
+                        val sharedPreferences: SharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                        val editor = sharedPreferences.edit()
+                        editor.putInt("user_id", userID)
+                        editor.apply()}
+
                     Log.d("httpresponse", "Login successful: ${response.message}")
                     return@withContext true
                 } else {
