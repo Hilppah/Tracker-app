@@ -101,6 +101,10 @@ class AddDataFragment : Fragment() {
                     val isDataSentSuccessful = sendData(dailyActivity)
                     if (isDataSentSuccessful == true) {
                         Toast.makeText((requireContext()), "Data saved successfully", Toast.LENGTH_SHORT).show()
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.fragmentContainer, CalendarFragment())
+                            .addToBackStack(null)
+                            .commit()
                     } else {
                         Toast.makeText((requireContext()), "Data save failed", Toast.LENGTH_SHORT).show()
                     }

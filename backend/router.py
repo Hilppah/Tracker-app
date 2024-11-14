@@ -116,7 +116,7 @@ def get_data():
         cursor.execute(get_query, (user_id, activity_date))
         result = cursor.fetchone()
 
-        if result:
+        if result is not None: 
             data = {
                 'activity_date': result[1],
                 'emotion': result[2],
@@ -125,7 +125,7 @@ def get_data():
             }
             return jsonify(data), 200
         else:
-            return jsonify({'error': 'No data found for the given user_id and date'}), 404
+            return jsonify({'error': 'No data found for the given date'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     finally:
