@@ -53,7 +53,10 @@ class SelectedDateFragment : Fragment() {
              CoroutineScope(Dispatchers.Main).launch {
                  val data = getData(selectedDate)
                  if (data == null) {
-                     //returns to calendar
+                     parentFragmentManager.beginTransaction()
+                         .replace(R.id.fragmentContainer, CalendarFragment())
+                         .addToBackStack(null)
+                         .commit()
                      println(data)
 
                  } else {
@@ -66,6 +69,10 @@ class SelectedDateFragment : Fragment() {
         }
 
        return view
+    }
+
+    fun updateDate() {
+        displayDate.text
     }
 
     fun updateViews(data: DailyActivity) {
