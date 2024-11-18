@@ -60,11 +60,9 @@
         android:layout_below="@+id/buttonUser"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
         android:layout_marginStart="130dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="130dp"
-        android:layout_marginBottom="300dp"
+        android:layout_marginTop="59dp"
+        android:layout_marginEnd="129dp"
         android:backgroundTint="#F88BAA"
         android:text="Delete all activity data"
         android:textColor="@color/white" />
