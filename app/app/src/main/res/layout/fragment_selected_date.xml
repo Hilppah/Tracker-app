@@ -53,34 +53,17 @@
         android:text="TextView" />
 
     <Button
-        android:id="@+id/buttonAdd"
+        android:id="@+id/buttonDelete"
         android:layout_width="152dp"
         android:layout_height="69dp"
         android:layout_below="@+id/textViewInfo"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
         android:layout_marginStart="136dp"
         android:layout_marginTop="64dp"
         android:layout_marginEnd="123dp"
-        android:layout_marginBottom="52dp"
         android:background="#c9b8ff"
-        android:text="How do you feel?"
-        android:textColor="@color/white" />
-
-    <Button
-        android:id="@+id/buttonDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_below="@+id/editTextSelectedDate"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="297dp"
-        android:layout_marginTop="51dp"
-        android:layout_marginEnd="26dp"
-        android:layout_marginBottom="34dp"
-        android:background="#c9b8ff"
-        android:text="Delete all"
+        android:text="Delete all from this date"
         android:textColor="@color/white" />
 
 

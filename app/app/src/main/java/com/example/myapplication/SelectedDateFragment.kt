@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -23,32 +24,31 @@ class SelectedDateFragment : Fragment() {
 
     private lateinit var displayDate: TextView
     private lateinit var deleteButton: Button
-    private lateinit var howFeelButton: Button
     private lateinit var feelingInfo: TextView
 
     data class DailyActivity @JsonCreator constructor(
-        @JsonProperty("date") val date: String,
+        @JsonProperty("activity_date") val date: String,
         @JsonProperty("emotion") val emotion: String,
         @JsonProperty("pain") val pain: String,
-        @JsonProperty("hoursSlept") val hoursSlept: Float
+        @JsonProperty("hours_slept") val hoursSlept: Float
 
     )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
+
     ): View? {
         val view= inflater.inflate(R.layout.fragment_selected_date, container, false)
-
-        displayDate = view.findViewById(R.id.editTextSelectedDate)
-        deleteButton =view.findViewById(R.id.buttonDelete)
-        howFeelButton = view.findViewById(R.id.buttonAdd)
-        feelingInfo = view.findViewById(R.id.textViewInfo)
-
 
         val selectedDate = arguments?.getString("selected_date")
         Log.d("selected date", "selected date $selectedDate" )
 
+        displayDate = view.findViewById(R.id.editTextSelectedDate)
+        deleteButton =view.findViewById(R.id.buttonDelete)
+        feelingInfo = view.findViewById(R.id.textViewInfo)
+
+        displayDate.text = selectedDate
         if (selectedDate != null) {
              CoroutineScope(Dispatchers.Main).launch {
                  val data = getData(selectedDate)
@@ -66,14 +66,26 @@ class SelectedDateFragment : Fragment() {
                      }
                  }
             }
+            deleteButton.setOnClickListener{
+                CoroutineScope(Dispatchers.Main).launch {
+                    val isDayDeleted = deleteDay(selectedDate)
+                    if (isDayDeleted){
+                        Toast.makeText(requireContext(), "Information of the day deleted successfully", Toast.LENGTH_SHORT).show()
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.fragmentContainer, CalendarFragment())
+                            .addToBackStack(null)
+                            .commit()
+                    } else {
+                        Toast.makeText(requireContext(), "Deletion failed", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
 
        return view
     }
 
-    fun updateDate() {
-        displayDate.text
-    }
+
 
     fun updateViews(data: DailyActivity) {
         feelingInfo.text = data.emotion + data.pain + data.hoursSlept
@@ -84,8 +96,13 @@ class SelectedDateFragment : Fragment() {
         return withContext(Dispatchers.IO) {
             try {
                 val client = OkHttpClient()
+                val sharedPreferences = requireContext().getSharedPreferences("user_prefs", MODE_PRIVATE)
+                val userId = sharedPreferences.getInt("user_id", 0)
+                val url ="http://10.0.2.2:5000/getData?&date=$selectedDate&user_id=$userId"
+
+
                 val request = Request.Builder()
-                    .url("http://10.0.2.2:5000/getData")
+                    .url(url)
                     .get()
                     .build()
 
@@ -107,6 +124,35 @@ class SelectedDateFragment : Fragment() {
         }
 
     }
+
+    private suspend fun deleteDay(date : String): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                val client = OkHttpClient()
+                val sharedPreferences =
+                    requireContext().getSharedPreferences("user_prefs", MODE_PRIVATE)
+                val userId = sharedPreferences.getInt("user_id", 0)
+                val url = "http://10.0.2.2:5000/delete?&user_id=$userId&date=$date"
+
+                val request = Request.Builder()
+                    .url(url)
+                    .delete()
+                    .build()
+
+                val response =client.newCall(request).execute()
+                if (response.isSuccessful){
+                    return@withContext true
+                }else{
+                    Log.e("DeleteDay", "Delete day error")
+                    return@withContext false
+                }
+            } catch (e: Exception) {
+                Log.e("DeleteDay", "Delete day exception")
+                return@withContext false
+            }
+        }
+    }
+
     companion object {
         fun newInstance(date: String): SelectedDateFragment {
             val fragment = SelectedDateFragment()

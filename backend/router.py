@@ -105,15 +105,15 @@ def get_data():
     user_id = request.args.get('user_id') 
     activity_date = request.args.get('date') 
 
-
     if not user_id or not activity_date:
         return jsonify({'error': 'Both user_id and date are required'}), 400
-    
+    date_object = datetime.strptime(activity_date, "%d/%m/%Y")
+    formatted_date = date_object.strftime("%Y-%m-%d")
     cursor = mysql.connection.cursor()
     get_query ="SELECT user_id, activity_date, emotion, pain, hours_slept FROM daily_activity WHERE user_id = %s AND activity_date = %s"
     
     try: 
-        cursor.execute(get_query, (user_id, activity_date))
+        cursor.execute(get_query, (user_id, formatted_date))
         result = cursor.fetchone()
 
         if result is not None: 
@@ -132,3 +132,50 @@ def get_data():
         cursor.close()
     
 
+@app.route('/delete', methods=['DELETE'])
+def delete_data():
+    user_id = request.args.get('user_id') 
+    activity_date = request.args.get('date') 
+    if not user_id:
+        return jsonify({'error': 'no userId'}), 400
+    
+    try:
+        cursor = mysql.connection.cursor()
+        if activity_date: 
+         date_object = datetime.strptime(activity_date, "%d/%m/%Y")
+         formatted_date = date_object.strftime("%Y-%m-%d")
+         deleteDate_query= """DELETE FROM daily_activity WHERE user_id = %s AND activity_date = %s"""
+         cursor.execute(deleteDate_query, (user_id, formatted_date))
+         mysql.connection.commit()
+
+        else: 
+            deleteAll_query = "DELETE FROM daily_activity WHERE user_id = %s"
+            cursor.execute(deleteAll_query, (user_id,))
+            mysql.connection.commit()
+        return jsonify({ 'message': 'data successfully deleted'}), 200   
+    except Exception as e:
+            mysql.connection.rollback()
+            return jsonify({'error': str(e)}), 500
+    finally:
+            cursor.close()
+    
+
+
+@app.route('/deleteUser', methods=['DELETE'])
+def delete_user():
+    user_id = request.args.get('user_id') 
+    if not user_id:
+        return jsonify({'error': 'no user Id'}), 400
+    user_id =int(user_id)
+    try:
+        cursor = mysql.connection.cursor()
+        deleteUser_query ="DELETE FROM users WHERE id =%s"
+        cursor.execute(deleteUser_query, (user_id,))
+        mysql.connection.commit()
+        return jsonify({ 'message': 'User successfully deleted'}), 200   
+    except Exception as e:
+            mysql.connection.rollback()
+            return jsonify({'error': str(e)}), 500
+    finally:
+            cursor.close()
+         
