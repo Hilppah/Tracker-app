@@ -160,15 +160,14 @@ def delete_data():
     if not user_id:
         return jsonify({'error': 'no userId'}), 400
     
-    date_object = datetime.strptime(activity_date, "%d/%m/%Y")
-    formatted_date = date_object.strftime("%Y-%m-%d")
-    
     try:
         cursor = mysql.connection.cursor()
         if activity_date: 
-         deleteDate_query= """DELETE FROM daily_activity WHERE user_id = %s AND activity_date = %s"""
-         cursor.execute(deleteDate_query, (user_id, formatted_date))
-         mysql.connection.commit()
+            date_object = datetime.strptime(activity_date, "%d/%m/%Y")
+            formatted_date = date_object.strftime("%Y-%m-%d")
+            deleteDate_query= """DELETE FROM daily_activity WHERE user_id = %s AND activity_date = %s"""
+            cursor.execute(deleteDate_query, (user_id, formatted_date))
+            mysql.connection.commit()
 
         else: 
             deleteAll_query = "DELETE FROM daily_activity WHERE user_id = %s"
