@@ -70,7 +70,7 @@ def login():
 
     return jsonify({'error': 'Invalid request method'}), 405
 
-@app.route('/addData', methods=['POST'])
+@app.route('/activity', methods=['POST'])
 def add_data():
     if request.method == 'POST':
         data = request.get_json()
@@ -100,32 +100,53 @@ def add_data():
 
 
 
-@app.route('/getData', methods=['GET'])
+@app.route('/activity', methods=['GET'])
 def get_data():
     user_id = request.args.get('user_id') 
     activity_date = request.args.get('date') 
 
-    if not user_id or not activity_date:
-        return jsonify({'error': 'Both user_id and date are required'}), 400
-    date_object = datetime.strptime(activity_date, "%d/%m/%Y")
-    formatted_date = date_object.strftime("%Y-%m-%d")
-    cursor = mysql.connection.cursor()
-    get_query ="SELECT user_id, activity_date, emotion, pain, hours_slept FROM daily_activity WHERE user_id = %s AND activity_date = %s"
-    
-    try: 
-        cursor.execute(get_query, (user_id, formatted_date))
-        result = cursor.fetchone()
+    if not user_id:
+        return jsonify({'error': 'user_id is required'}), 400
 
-        if result is not None: 
-            data = {
-                'activity_date': result[1],
-                'emotion': result[2],
-                'pain': result[3],
-                'hours_slept': result[4]
-            }
-            return jsonify(data), 200
+    cursor = mysql.connection.cursor()
+
+    try:
+        if not activity_date:
+            get_all_query = """SELECT activity_date, emotion, pain, hours_slept FROM daily_activity WHERE user_id = %s"""
+            cursor.execute(get_all_query, (user_id,))
+            results = cursor.fetchall()
+
+            if results:
+                data = [
+                    {
+                        'activity_date': result[0],
+                        'emotion': result[1],
+                        'pain': result[2],
+                        'hours_slept': result[3]
+                    }
+                    for result in results
+                ]
+                return jsonify(data), 200
+            else:
+                return jsonify({'error': 'No data found for the user'}), 404
         else:
-            return jsonify({'error': 'No data found for the given date'}), 404
+            date_object = datetime.strptime(activity_date, "%d/%m/%Y")
+            formatted_date = date_object.strftime("%Y-%m-%d")
+
+            get_query = """SELECT activity_date, emotion, pain, hours_slept FROM daily_activity WHERE user_id = %s AND activity_date = %s"""
+            cursor.execute(get_query, (user_id, formatted_date))
+            result = cursor.fetchone()
+
+            if result is not None:
+                data = {
+                    'activity_date': result[0],
+                    'emotion': result[1],
+                    'pain': result[2],
+                    'hours_slept': result[3]
+                }
+                return jsonify(data), 200
+            else:
+                return jsonify({'error': 'No data found for the given date'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     finally:
@@ -139,11 +160,12 @@ def delete_data():
     if not user_id:
         return jsonify({'error': 'no userId'}), 400
     
+    date_object = datetime.strptime(activity_date, "%d/%m/%Y")
+    formatted_date = date_object.strftime("%Y-%m-%d")
+    
     try:
         cursor = mysql.connection.cursor()
         if activity_date: 
-         date_object = datetime.strptime(activity_date, "%d/%m/%Y")
-         formatted_date = date_object.strftime("%Y-%m-%d")
          deleteDate_query= """DELETE FROM daily_activity WHERE user_id = %s AND activity_date = %s"""
          cursor.execute(deleteDate_query, (user_id, formatted_date))
          mysql.connection.commit()

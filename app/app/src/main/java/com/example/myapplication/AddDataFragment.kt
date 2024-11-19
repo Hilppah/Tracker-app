@@ -37,6 +37,7 @@ class AddDataFragment : Fragment() {
     private lateinit var hoursSlept: EditText
     private lateinit var selectedDate: EditText
     private lateinit var  buttonSave: Button
+    private lateinit var  buttonProfile: Button
 
     private var selectedEmotionsList = mutableListOf<String>()
     private var selectedPainList = mutableListOf<String>()
@@ -71,6 +72,7 @@ class AddDataFragment : Fragment() {
         hoursSlept = view.findViewById(R.id.editTextTime)
         selectedDate = view.findViewById(R.id.editTextDate)
         buttonSave = view.findViewById(R.id.buttonSave)
+        buttonProfile = view.findViewById(R.id.buttonProfile)
 
 
 
@@ -114,28 +116,34 @@ class AddDataFragment : Fragment() {
             }
         }
 
+        buttonProfile.setOnClickListener{
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, ProfileFragment())
+                .addToBackStack(null)
+                .commit()}
+
         buttonHappy.setOnClickListener{
-            toggleEmotion("happy", buttonHappy)
+            toggleEmotion("Happy", buttonHappy)
         }
 
         buttonSad.setOnClickListener{
-            toggleEmotion("sad", buttonSad)
+            toggleEmotion("Sad", buttonSad)
         }
 
         buttonConfident.setOnClickListener{
-            toggleEmotion("confident", buttonConfident)
+            toggleEmotion("Confident", buttonConfident)
         }
 
         buttonAnxious.setOnClickListener{
-            toggleEmotion("anxious", buttonAnxious)
+            toggleEmotion("Anxious", buttonAnxious)
         }
 
         buttonAngry.setOnClickListener{
-            toggleEmotion("angry", buttonAngry)
+            toggleEmotion("Angry", buttonAngry)
         }
 
         buttonNoPain.setOnClickListener{
-            togglePain("no pain", buttonNoPain)
+            togglePain("No pain", buttonNoPain)
         }
 
         buttonFlu.setOnClickListener{
@@ -147,7 +155,7 @@ class AddDataFragment : Fragment() {
         }
 
         buttonHeadache.setOnClickListener{
-            togglePain("headache", buttonHeadache)
+            togglePain("Headache", buttonHeadache)
         }
 
         buttonCramps.setOnClickListener{
@@ -201,7 +209,7 @@ class AddDataFragment : Fragment() {
             try {
                 val client = OkHttpClient()
                 val request = Request.Builder()
-                    .url("http://10.0.2.2:5000/addData")
+                    .url("http://10.0.2.2:5000/activity")
                     .post(requestBody)
                     .build()
 
