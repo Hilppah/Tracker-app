@@ -25,6 +25,7 @@ class SelectedDateFragment : Fragment() {
     private lateinit var displayDate: TextView
     private lateinit var deleteButton: Button
     private lateinit var feelingInfo: TextView
+    private lateinit var profileButton: Button
 
     data class DailyActivity @JsonCreator constructor(
         @JsonProperty("activity_date") val date: String,
@@ -47,6 +48,7 @@ class SelectedDateFragment : Fragment() {
         displayDate = view.findViewById(R.id.editTextSelectedDate)
         deleteButton =view.findViewById(R.id.buttonDelete)
         feelingInfo = view.findViewById(R.id.textViewInfo)
+        profileButton = view.findViewById(R.id.buttonProfile)
 
         displayDate.text = selectedDate
         if (selectedDate != null) {
@@ -66,6 +68,13 @@ class SelectedDateFragment : Fragment() {
                      }
                  }
             }
+
+            profileButton.setOnClickListener{
+                parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, ProfileFragment())
+                .addToBackStack(null)
+                .commit()}
+
             deleteButton.setOnClickListener{
                 CoroutineScope(Dispatchers.Main).launch {
                     val isDayDeleted = deleteDay(selectedDate)
@@ -88,8 +97,12 @@ class SelectedDateFragment : Fragment() {
 
 
     fun updateViews(data: DailyActivity) {
-        feelingInfo.text = data.emotion + data.pain + data.hoursSlept
-        Log.d("updateview", "updateview ${data.emotion}" )
+        val emotions = data.emotion.split(", ").joinToString(", ")
+        val pains = data.pain.split(", ").joinToString(", ")
+        val hoursSlept = data.hoursSlept.toString()
+
+        feelingInfo.text = "Emotion: $emotions\nPain: $pains\nHours Slept: $hoursSlept"
+        Log.d("updateview", "updateview Emotion: $emotions, Pain: $pains, Hours Slept: $hoursSlept")
     }
 
     private suspend fun getData(selectedDate: String): DailyActivity? {
@@ -98,7 +111,7 @@ class SelectedDateFragment : Fragment() {
                 val client = OkHttpClient()
                 val sharedPreferences = requireContext().getSharedPreferences("user_prefs", MODE_PRIVATE)
                 val userId = sharedPreferences.getInt("user_id", 0)
-                val url ="http://10.0.2.2:5000/getData?&date=$selectedDate&user_id=$userId"
+                val url ="http://10.0.2.2:5000/activity?&date=$selectedDate&user_id=$userId"
 
 
                 val request = Request.Builder()
@@ -110,7 +123,11 @@ class SelectedDateFragment : Fragment() {
                 if (response.isSuccessful) {
                     val objectMapper = ObjectMapper()
                     val responseData = response.body?.string() ?: ""
-                    objectMapper.readValue(responseData, DailyActivity::class.java)
+                    val dailyActivity = objectMapper.readValue(responseData, DailyActivity::class.java)
+
+                    val emotionsList = dailyActivity.emotion.split(",").map { it.trim() }
+                    val painsList = dailyActivity.pain.split(",").map { it.trim() }
+                    dailyActivity.copy(emotion = emotionsList.joinToString(", "), pain = painsList.joinToString(", "))
                 } else {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(requireContext(), "Failed to fetch activity with selected date $selectedDate", Toast.LENGTH_SHORT).show()
@@ -152,6 +169,7 @@ class SelectedDateFragment : Fragment() {
             }
         }
     }
+
 
     companion object {
         fun newInstance(date: String): SelectedDateFragment {

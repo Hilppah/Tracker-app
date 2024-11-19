@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -44,7 +45,7 @@ class RegisterFragment : Fragment() {
                 val registerSuccessful = register()
                 if (registerSuccessful) {
                     Log.d("register fragment", "successful")
-                    Toast.makeText(requireContext(), "Register  successful", Toast.LENGTH_SHORT)
+                    Toast.makeText(requireContext(), "Register successful", Toast.LENGTH_SHORT)
                         .show()
                     parentFragmentManager.beginTransaction()
                         .replace(R.id.fragmentContainer, LoginFragment())
@@ -69,6 +70,7 @@ class RegisterFragment : Fragment() {
         return view
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private suspend fun register(): Boolean {
         val registerData = mapOf(
             "email" to emailText.text.toString(),
